@@ -87,6 +87,18 @@ cdef flag_in_bitfield(uint64_t bitfield, uint64_t flag):
     return bool(bitfield & flag)
 
 
+def av_rescale_q(ts: int, source_time_base: Fraction, target_time_base: Fraction):
+    # Rescales from one time base to another
+    cdef:
+        lib.AVRational _source_time_base_av_rational
+        lib.AVRational _target_time_base_av_rational
+
+    to_avrational(source_time_base, &_source_time_base_av_rational)
+    to_avrational(target_time_base, &_target_time_base_av_rational)
+
+    return lib.av_rescale_q(ts, _source_time_base_av_rational, _target_time_base_av_rational)
+
+
 # === BACKWARDS COMPAT ===
 
 from .error import FFmpegError as AVError
